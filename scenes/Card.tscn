@@ -1,0 +1,143 @@
+[gd_scene load_steps=3 format=3 uid="uid://b0cardviewscene"]
+
+[ext_resource type="Script" path="res://scripts/card_view.gd" id="1_card_view"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_normal"]
+bg_color = Color(0.98, 0.98, 0.99, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.7, 0.75, 0.8, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+shadow_color = Color(0, 0, 0, 0.35)
+shadow_size = 4
+shadow_offset = Vector2(0, 2)
+
+[node name="Card" type="Control"]
+custom_minimum_size = Vector2(76, 108)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 76.0
+offset_bottom = 108.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+focus_mode = 2
+script = ExtResource("1_card_view")
+
+[node name="CardPanel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+theme_override_styles/panel = SubResource("StyleBoxFlat_normal")
+
+[node name="TopLeft" type="VBoxContainer" parent="CardPanel"]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 3.0
+offset_right = 26.0
+offset_bottom = 40.0
+theme_override_constants/separation = -4
+
+[node name="RankTop" type="Label" parent="CardPanel/TopLeft"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.12, 0.12, 0.12, 1)
+theme_override_font_sizes/font_size = 15
+text = "A"
+horizontal_alignment = 1
+
+[node name="SuitTop" type="Label" parent="CardPanel/TopLeft"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.12, 0.12, 0.12, 1)
+theme_override_font_sizes/font_size = 12
+text = "♠"
+horizontal_alignment = 1
+
+[node name="SuitCenter" type="Label" parent="CardPanel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -26.0
+offset_top = -24.0
+offset_right = 26.0
+offset_bottom = 24.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.12, 0.12, 0.12, 1)
+theme_override_font_sizes/font_size = 36
+text = "♠"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BottomRight" type="VBoxContainer" parent="CardPanel"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -26.0
+offset_top = -40.0
+offset_right = -4.0
+offset_bottom = -3.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_constants/separation = -4
+
+[node name="SuitBottom" type="Label" parent="CardPanel/BottomRight"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.12, 0.12, 0.12, 1)
+theme_override_font_sizes/font_size = 12
+text = "♠"
+horizontal_alignment = 1
+
+[node name="RankBottom" type="Label" parent="CardPanel/BottomRight"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.12, 0.12, 0.12, 1)
+theme_override_font_sizes/font_size = 15
+text = "A"
+horizontal_alignment = 1
+
+[node name="CheckBadge" type="Label" parent="CardPanel"]
+visible = false
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -20.0
+offset_top = 2.0
+offset_right = -2.0
+offset_bottom = 20.0
+grow_horizontal = 0
+theme_override_colors/font_color = Color(0, 0.9, 0.4, 1)
+theme_override_font_sizes/font_size = 14
+text = "✓"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ImmunityBadge" type="Label" parent="CardPanel"]
+visible = false
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -56.0
+offset_top = 4.0
+offset_right = -4.0
+offset_bottom = 22.0
+grow_horizontal = 0
+theme_override_colors/font_color = Color(1, 0.35, 0.35, 1)
+theme_override_font_sizes/font_size = 10
+text = "耐性"
+horizontal_alignment = 1
+vertical_alignment = 1

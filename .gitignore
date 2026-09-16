@@ -8,7 +8,13 @@ export.cfg
 export_credentials.cfg
 *.tmp
 
-# Imported translations (automatically generated from CSV files)
+# Android / Build outputs
+build/
+*.apk
+*.idsig
+*.apk.idsig
+
+# Imported translations
 *.translation
 
 # Mono-specific ignores

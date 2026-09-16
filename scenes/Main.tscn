@@ -1,0 +1,214 @@
+[gd_scene load_steps=5 format=3 uid="uid://b0mainscenes01"]
+
+[ext_resource type="Script" path="res://scripts/main_game.gd" id="1_main"]
+[ext_resource type="PackedScene" uid="uid://b0cardviewscene" path="res://scenes/Card.tscn" id="2_card_scene"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hp_bg"]
+bg_color = Color(0.12, 0.15, 0.19, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hp_fill"]
+bg_color = Color(0.92, 0.23, 0.23, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[node name="Main" type="Control"]
+custom_minimum_size = Vector2(720, 720)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_main")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.08, 0.1, 0.13, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+
+[node name="EnemyArea" type="Control" parent="VBoxContainer"]
+custom_minimum_size = Vector2(720, 240)
+layout_mode = 2
+
+[node name="HBox" type="HBoxContainer" parent="VBoxContainer/EnemyArea"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 32.0
+offset_top = 24.0
+offset_right = -32.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 28
+alignment = 1
+
+[node name="EnemyCardContainer" type="CenterContainer" parent="VBoxContainer/EnemyArea/HBox"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+
+[node name="EnemyCardView" parent="VBoxContainer/EnemyArea/HBox/EnemyCardContainer" instance=ExtResource("2_card_scene")]
+custom_minimum_size = Vector2(88, 126)
+layout_mode = 2
+
+[node name="StatusContainer" type="VBoxContainer" parent="VBoxContainer/EnemyArea/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="EnemyNameLabel" type="Label" parent="VBoxContainer/EnemyArea/HBox/StatusContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "👑 Jack of Clubs"
+
+[node name="HpLabel" type="Label" parent="VBoxContainer/EnemyArea/HBox/StatusContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "HP: 20 / 20"
+
+[node name="EnemyHpBar" type="ProgressBar" parent="VBoxContainer/EnemyArea/HBox/StatusContainer"]
+custom_minimum_size = Vector2(0, 18)
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_hp_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_hp_fill")
+max_value = 20.0
+value = 20.0
+show_percentage = false
+
+[node name="AttackLabel" type="Label" parent="VBoxContainer/EnemyArea/HBox/StatusContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.35, 0.35, 1)
+theme_override_font_sizes/font_size = 20
+text = "ATK: 10"
+
+[node name="FieldArea" type="Control" parent="VBoxContainer"]
+custom_minimum_size = Vector2(720, 180)
+layout_mode = 2
+
+[node name="FieldVBox" type="VBoxContainer" parent="VBoxContainer/FieldArea"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 8.0
+offset_right = -20.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="DeckInfoHBox" type="HBoxContainer" parent="VBoxContainer/FieldArea/FieldVBox"]
+layout_mode = 2
+theme_override_constants/separation = 24
+alignment = 1
+
+[node name="CastleDeckLabel" type="Label" parent="VBoxContainer/FieldArea/FieldVBox/DeckInfoHBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.4, 1)
+theme_override_font_sizes/font_size = 16
+text = "城の敵: 12体"
+
+[node name="TavernDeckLabel" type="Label" parent="VBoxContainer/FieldArea/FieldVBox/DeckInfoHBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.8, 1, 1)
+theme_override_font_sizes/font_size = 16
+text = "山札: 32"
+
+[node name="DiscardPileLabel" type="Label" parent="VBoxContainer/FieldArea/FieldVBox/DeckInfoHBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.75, 0.75, 0.8, 1)
+theme_override_font_sizes/font_size = 16
+text = "捨て札: 0"
+
+[node name="BannerLabel" type="Label" parent="VBoxContainer/FieldArea/FieldVBox"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9, 0.1, 1)
+theme_override_font_sizes/font_size = 24
+text = "EXACT KILL!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LastActionLabel" type="Label" parent="VBoxContainer/FieldArea/FieldVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.92, 1, 1)
+theme_override_font_sizes/font_size = 15
+text = "ゲーム開始！手札からカードを選択して出撃してください。"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="SelectionInfoLabel" type="Label" parent="VBoxContainer/FieldArea/FieldVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9, 0.65, 1)
+theme_override_font_sizes/font_size = 14
+text = "カードを選択してください"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="HandArea" type="Control" parent="VBoxContainer"]
+custom_minimum_size = Vector2(720, 300)
+layout_mode = 2
+
+[node name="HandVBox" type="VBoxContainer" parent="VBoxContainer/HandArea"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = 8.0
+offset_right = -12.0
+offset_bottom = -14.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 12
+
+[node name="HandContainer" type="CenterContainer" parent="VBoxContainer/HandArea/HandVBox"]
+custom_minimum_size = Vector2(0, 210)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HandScroll" type="ScrollContainer" parent="VBoxContainer/HandArea/HandVBox/HandContainer"]
+custom_minimum_size = Vector2(696, 180)
+layout_mode = 2
+horizontal_scroll_mode = 1
+vertical_scroll_mode = 0
+
+[node name="HandHBox" type="HBoxContainer" parent="VBoxContainer/HandArea/HandVBox/HandContainer/HandScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="FooterGuide" type="Label" parent="VBoxContainer/HandArea/HandVBox"]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.9, 0.6, 1)
+theme_override_font_sizes/font_size = 13
+text = "A: 決定 | X: 選択/解除 | Y: パス | B: 取消 | 十字キー: 移動"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
