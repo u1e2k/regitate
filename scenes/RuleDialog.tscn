@@ -1,0 +1,134 @@
+[gd_scene load_steps=3 format=3 uid="uid://b0ruledialogsc01"]
+
+[ext_resource type="Script" path="res://scripts/rule_dialog.gd" id="1_rule"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_modal"]
+bg_color = Color(0.1, 0.12, 0.16, 0.96)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.9, 0.75, 0.3, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color(0, 0, 0, 0.7)
+shadow_size = 16
+
+[node name="RuleDialog" type="Control"]
+custom_minimum_size = Vector2(720, 720)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_rule")
+
+[node name="Dimmer" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.65)
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -330.0
+offset_top = -320.0
+offset_right = 330.0
+offset_bottom = 320.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_modal")
+
+[node name="VBox" type="VBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 20.0
+offset_right = -24.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 12
+
+[node name="TitleLabel" type="Label" parent="Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
+theme_override_font_sizes/font_size = 22
+text = "📖 Regitate ルール説明"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="ContentVBox" type="VBoxContainer" parent="Panel/VBox/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+
+[node name="Section1" type="Label" parent="Panel/VBox/ScrollContainer/ContentVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.5, 0.8, 1, 1)
+theme_override_font_sizes/font_size = 15
+text = "【スート能力】"
+
+[node name="Desc1" type="RichTextLabel" parent="Panel/VBox/ScrollContainer/ContentVBox"]
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 13
+bbcode_enabled = true
+text = "[color=#2e7d32]♣ クラブ[/color]: 与ダメージ2倍
+[color=#2196f3]♠ スペード[/color]: 敵の攻撃力を数値分永続軽減(シールド)
+[color=#e53935]♦ ダイヤ[/color]: 山札から数値分ドロー(上限8枚)
+[color=#ff5252]♥ ハート[/color]: 捨て札をシャッフルし山札の底へ戻す"
+fit_content = true
+
+[node name="Section2" type="Label" parent="Panel/VBox/ScrollContainer/ContentVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.5, 0.8, 1, 1)
+theme_override_font_sizes/font_size = 15
+text = "【特殊ルール】"
+
+[node name="Desc2" type="RichTextLabel" parent="Panel/VBox/ScrollContainer/ContentVBox"]
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 13
+bbcode_enabled = true
+text = "・[b]スート耐性[/b]: 敵と同じスートのカードは能力無効(ダメージのみ)
+・[b]相棒(A)[/b]: パワー1。単体または他の任意のカード1枚とペア出撃可能
+・[b]セット出し[/b]: 同じ数字のカードは合計<=10まで同時プレイ可能
+・[b]ぴったり撃破(Exact Kill)[/b]: 敵HPちょうど0で倒すと山札トップに仲間入り！
+・[b]反撃[/b]: 敵が生きていればATK分のカードを捨てて防御。足りないとGAME OVER"
+fit_content = true
+
+[node name="Section3" type="Label" parent="Panel/VBox/ScrollContainer/ContentVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.5, 0.8, 1, 1)
+theme_override_font_sizes/font_size = 15
+text = "【🃏 道化師 (Joker)】"
+
+[node name="Desc3" type="RichTextLabel" parent="Panel/VBox/ScrollContainer/ContentVBox"]
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 13
+bbcode_enabled = true
+text = "・攻撃時: 敵のスート耐性を完全解除 ＆ 手札を8枚までリフレッシュドロー(反撃なし)
+・反撃時: 1枚捨てるだけで敵のいかなる攻撃も完全防御"
+fit_content = true
+
+[node name="CloseButton" type="Button" parent="Panel/VBox"]
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "閉じる (Bボタン / Aボタン)"

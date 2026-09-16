@@ -5,7 +5,21 @@
 </p>
 
 Godot Engine 4.x (GDScript) で開発された、正方形ディスプレイ搭載Android携帯ゲーム機「**ANBERNIC RG Rotate**（720×720）」向けのソロ・トランプRPG『**Regitate**』です。  
-名作協力型トランプゲーム「Regicide」のルールをベースに、物理ゲームパッド（十字キー・ABXYボタン）に最適化されたスムーズな操作体系とレスポンシブな正方形UIを実現しています。
+名作協力型トランプゲーム「Regicide」のルールをベースに、物理ゲームパッド（十字キー・ABXYボタン・STARTボタン）に最適化されたスムーズな操作体系とレスポンシブな正方形UIを実現しています。
+
+---
+
+## 📸 スクリーンショット（Screenshots）
+
+<p align="center">
+  <img src="screenshot_title.png" width="31%" alt="Title Screen" style="border-radius: 8px; margin: 4px;" />
+  <img src="screenshot_game.png" width="31%" alt="Battle Screen" style="border-radius: 8px; margin: 4px;" />
+  <img src="screenshot_pause.png" width="31%" alt="Pause Screen" style="border-radius: 8px; margin: 4px;" />
+</p>
+
+<p align="center">
+  <sub>左: タイトル画面（難易度切替） / 中央: バトル画面（手札＆敵ボス） / 右: ポーズ画面</sub>
+</p>
 
 ---
 
@@ -13,11 +27,32 @@ Godot Engine 4.x (GDScript) で開発された、正方形ディスプレイ搭�
 
 | 操作 | 携帯機ボタン (ANBERNIC) | キーボード | 動作 |
 |---|---|---|---|
-| **カーソル移動** | **十字キー** (D-Pad `←` `→`) | `←` `→` | 手札内のフォーカス移動（自動スクロール追従 / -10px 浮揚） |
-| **決定 / プレイ** | **A ボタン** (Joypad 0) | `Enter` / `Space` | 選択カードの出撃 / 単体カード即時プレイ / 防御確定 |
-| **選択切替 (トグル)** | **X ボタン** (Joypad 2) | `X` | フォーカス中のカードを選択リストに追加 / 解除（-25px 浮揚 + ✓表示） |
+| **カーソル移動** | **十字キー** (D-Pad `←` `→` `↑` `↓`) | 矢印キー (`←` `→` `↑` `↓`) | 手札フォーカス移動 / メニュー項目選択 / 難易度切替 |
+| **決定 / プレイ** | **A ボタン** (Joypad 0) | `Enter` / `Space` | 選択カードの出撃 / 単体即時プレイ / 防御確定 / メニュー決定 |
+| **選択切替 (トグル)** | **X ボタン** (Joypad 2) | `X` | フォーカス中のカードを選択リストに追加 / 解除（-20px 浮揚 + ✓表示） |
 | **パス (イールド)** | **Y ボタン** (Joypad 3) | `Y` | カードを出さずに敵の反撃フェーズへ進む |
-| **キャンセル (全解除)** | **B ボタン** (Joypad 1) | `Escape` / `Backspace` | 複数選択状態をすべてクリア |
+| **キャンセル / 戻る** | **B ボタン** (Joypad 1) | `Escape` / `Backspace` | 複数選択の全解除 / ポーズ画面を閉じる |
+| **ポーズメニュー** | **START ボタン** (Joypad 6) | `P` / `Escape` | ポーズ画面を開く（再開 / リスタート / ルール確認 / タイトルへ） |
+
+---
+
+## 🌟 難易度設定 & 🃏 道化師（Joker）
+
+タイトル画面でいつでもプレイスタイルに合わせた難易度を選択可能です。
+
+| 難易度 | ジョーカー所持 | 敵ステータス (HP / ATK) | 特徴 |
+|---|---|---|---|
+| **カジュアル (Casual)** | **2枚** | Jack: 15/8, Queen: 25/12, King: 35/16 | 敵ATK・HP控えめ。初心者や気軽に楽しみたい方向け |
+| **ノーマル (Normal)** | **2枚** | Jack: 20/10, Queen: 30/15, King: 40/20 | **公式推奨ルール**。適度な緊張感と手札事故救済のバランス |
+| **ハード (Hard)** | **なし (0枚)** | Jack: 20/10, Queen: 30/15, King: 40/20 | ジョーカーなしの過酷なストイックモード |
+
+### 🃏 道化師 (Joker) の能力
+- **攻撃手番でのプレイ**:
+  - 現在の**敵のスート耐性を完全無効化**（敵と同スートのカードでも全効果が発動可能に）。
+  - さらに山札から手札が上限（8枚）になるまで**リフレッシュドロー**。
+  - 敵の反撃は発生せず、プレイヤーの連続攻撃手番となります。
+- **反撃フェーズでのプレイ**:
+  - ジョーカー1枚を捨てるだけで、敵のいかなる攻撃力も**完全無効化（0ダメージ防御）**。
 
 ---
 
@@ -26,9 +61,6 @@ Godot Engine 4.x (GDScript) で開発された、正方形ディスプレイ搭�
 ### 1. デッキ構成
 - **Castle Deck（敵城主 / 12体）**:
   - 下から順に **King (4枚)** → **Queen (4枚)** → **Jack (4枚)** をそれぞれシャッフルして積載。
-  - **Jack**: HP 20 / 攻撃力 10
-  - **Queen**: HP 30 / 攻撃力 15
-  - **King**: HP 40 / 攻撃力 20
 - **Tavern Deck（プレイヤー山札 / 40枚）**:
   - `A`〜`10` のカード（4スート × 10枚 = 40枚）。初期手札・上限枚数は **8枚**。
 
@@ -40,9 +72,9 @@ Godot Engine 4.x (GDScript) で開発された、正方形ディスプレイ搭�
 
 ### 3. 特殊ルール
 - **スート耐性**: 敵と同じスートのカードは **ダメージのみ有効**（スート能力は無効化）。
-- **エース（A / 相棒）**: 攻撃力 1。単体出しのほか、**他の任意のカード1枚とペア出撃** が可能（両方のスート効果が合算発動）。
-- **セット出し**: 同一ランクのカード（ペア、トリプル、クアッド）は、**合計値が10以下** であれば同時出撃が可能（例: 2×5=10, 3×3=9, 4×2=8, 5×2=10）。
-- **ぴったり撃破（Exact Kill）**: 敵の残りHP **ちょうど0** で倒した場合、その敵絵札（J=10, Q=15, K=20）を捨て札ではなく **Tavern Deck のトップに追加**（強力な味方カードとして手札にドロー可能）。
+- **相棒(A)**: 攻撃力 1。単体出しのほか、**他の任意のカード1枚とペア出撃** が可能（両方のスート効果が合算発動）。
+- **セット出し**: 同一ランクのカードは、**合計値が10以下** であれば同時出撃が可能（例: 2×5=10, 3×3=9, 4×2=8, 5×2=10）。
+- **ぴったり撃破（Exact Kill）**: 敵の残りHP **ちょうど0** で倒した場合、その敵絵札（J=10, Q=15, K=20）を捨て札ではなく **Tavern Deck のトップに追加**（強力な味方カードとして使用可能）。
 - **反撃フェーズ**: 敵が生き残っている場合、敵の現在攻撃力以上の防御値になるよう手札からカードを選択して捨て札にします。捨てきれない場合は **GAME OVER**。
 
 ---
@@ -62,18 +94,28 @@ Godot Engine 4.x (GDScript) で開発された、正方形ディスプレイ搭�
 
 ```text
 regitate/
-├── project.godot            # プロジェクト設定・InputMap定義・アイコン設定
+├── project.godot            # プロジェクト設定・Autoload・InputMap
 ├── export_presets.cfg       # Androidエクスポートプリセット (com.anbernic.regitate)
 ├── icon.png                 # アプリアイコン
-├── .gitignore               # Godot & Androidビルド除外設定
+├── screenshot_title.png     # タイトル画面スクリーンショット
+├── screenshot_game.png      # バトル画面スクリーンショット
+├── screenshot_pause.png     # ポーズ画面スクリーンショット
+├── .gitignore               # ビルド・キャッシュ除外設定
 ├── scripts/
-│   ├── card_data.gd         # カードデータ・スート効果・ステータスモデル
+│   ├── game_state.gd        # グローバル難易度・セッションシングルトン
+│   ├── card_data.gd         # カードデータ・Joker・スート効果モデル
 │   ├── game_engine.gd       # デッキ・スート解決・Exact Kill・反撃計算エンジン
-│   ├── card_view.gd         # カード単体UI制御（D-Padフォーカス/選択アニメーション）
-│   └── main_game.gd         # メイン進行・InputMapディスパッチ・HUD同期
+│   ├── card_view.gd         # カードUI制御（リアルなトランプ比率・アニメーション）
+│   ├── title_screen.gd      # タイトル画面制御（D-Pad難易度切替・メニュー）
+│   ├── pause_menu.gd        # ポーズメニュー制御（STARTボタン連動・ポーズ中入力）
+│   ├── rule_dialog.gd       # 遊び方・ルール説明モーダル制御
+│   └── main_game.gd         # メインバトル進行・HUD同期
 ├── scenes/
-│   ├── Card.tscn            # カードUIコンポーネント (75x110px)
-│   └── Main.tscn            # 720x720 レスポンシブメインシーン (Top/Middle/Bottom)
+│   ├── Title.tscn           # タイトルシーン（メインシーン）
+│   ├── Main.tscn            # メインバトルシーン (720x720)
+│   ├── Card.tscn            # トランプカードコンポーネント (76x108px)
+│   ├── PauseMenu.tscn       # ポーズモーダルシーン
+│   └── RuleDialog.tscn      # ルール説明モーダルシーン
 └── build/
     └── regitate.apk         # Android用ビルド済み APK
 ```
@@ -93,5 +135,5 @@ Godot_v4.7.2-stable_win64_console.exe --headless --export-debug "Android" ./buil
 adb install -r ./build/regitate.apk
 
 # アプリ起動
-adb shell am start -n com.anbernic.regitate/com.godot.game.GodotApp
+adb shell monkey -p com.anbernic.regitate -c android.intent.category.LAUNCHER 1
 ```

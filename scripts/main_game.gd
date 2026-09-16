@@ -2,9 +2,11 @@ class_name MainGame
 extends Control
 
 const CARD_VIEW_SCENE = preload("res://scenes/Card.tscn")
+const PAUSE_MENU_SCENE = preload("res://scenes/PauseMenu.tscn")
 
 # 内部ゲームエンジン
 var game_engine: GameEngine
+var pause_menu: PauseMenu
 
 # 手札フォーカス・選択管理
 var focused_hand_index: int = 0
@@ -32,7 +34,8 @@ var banner_tween: Tween
 
 func _ready() -> void:
 	_setup_engine()
-	game_engine.start_new_game()
+	_setup_pause_menu()
+	game_engine.start_new_game(GameState.current_difficulty)
 
 func _setup_engine() -> void:
 	game_engine = GameEngine.new()
@@ -49,12 +52,25 @@ func _setup_engine() -> void:
 	game_engine.game_over.connect(_on_game_over)
 	game_engine.game_won.connect(_on_game_won)
 
+func _setup_pause_menu() -> void:
+	pause_menu = PAUSE_MENU_SCENE.instantiate() as PauseMenu
+	add_child(pause_menu)
+	pause_menu.visible = false
+	pause_menu.restarted.connect(func(): game_engine.start_new_game(GameState.current_difficulty))
+
 ## D-Pad / ゲームパッド / キーボード入力処理
 func _unhandled_input(event: InputEvent) -> void:
+	# ポーズメニュー開閉 (STARTボタン / P / Esc)
+	if event.is_action_pressed("action_pause"):
+		if not pause_menu.visible:
+			pause_menu.open_menu()
+			get_viewport().set_input_as_handled()
+			return
+
 	# ゲームオーバー / 勝利時のリスタート
 	if game_engine.current_phase == GameEngine.Phase.PHASE_GAME_OVER or game_engine.current_phase == GameEngine.Phase.PHASE_GAME_WIN:
 		if event.is_action_pressed("action_play") or event.is_action_pressed("action_cancel"):
-			game_engine.start_new_game()
+			game_engine.start_new_game(GameState.current_difficulty)
 			get_viewport().set_input_as_handled()
 			return
 
@@ -124,13 +140,11 @@ func _scroll_to_focused() -> void:
 func _handle_action_play() -> void:
 	var cards_to_act: Array[CardData] = []
 	
-	# 複数選択されているカードがあれば優先
 	if not selected_indices.is_empty():
 		selected_indices.sort()
 		for idx in selected_indices:
 			if idx < game_engine.hand.size():
 				cards_to_act.append(game_engine.hand[idx])
-	# 選択されていなければ、現在フォーカスしている1枚
 	elif focused_hand_index >= 0 and focused_hand_index < game_engine.hand.size():
 		cards_to_act.append(game_engine.hand[focused_hand_index])
 	
@@ -159,18 +173,15 @@ func _handle_action_play() -> void:
 func _update_hand_views() -> void:
 	var cards = game_engine.hand
 	
-	# フォーカスインデックスの整合性
 	if focused_hand_index >= cards.size():
 		focused_hand_index = max(0, cards.size() - 1)
 	
-	# 選択インデックスのクリーニング
 	var valid_selected: Array[int] = []
 	for idx in selected_indices:
 		if idx < cards.size():
 			valid_selected.append(idx)
 	selected_indices = valid_selected
 	
-	# 手札ノード数の同期
 	while hand_hbox.get_child_count() < cards.size():
 		var card_inst = CARD_VIEW_SCENE.instantiate() as CardView
 		var idx = hand_hbox.get_child_count()
@@ -182,7 +193,6 @@ func _update_hand_views() -> void:
 		hand_hbox.remove_child(child)
 		child.queue_free()
 	
-	# 各カードの見た目更新
 	for i in range(cards.size()):
 		var child = hand_hbox.get_child(i) as CardView
 		child.set_card_data(cards[i])
@@ -201,7 +211,7 @@ func _on_card_view_clicked(index: int) -> void:
 
 func _update_selection_info() -> void:
 	if game_engine.current_phase == GameEngine.Phase.PHASE_GAME_OVER:
-		selection_info_label.text = "A または B で再挑戦"
+		selection_info_label.text = "A または B で再挑戦 / STARTでポーズ"
 		return
 	if game_engine.current_phase == GameEngine.Phase.PHASE_GAME_WIN:
 		selection_info_label.text = "全敵撃破！ A または B でリスタート"
@@ -275,6 +285,8 @@ func _on_deck_counts_changed(tavern_count: int, discard_count: int, castle_count
 
 func _on_action_resolved(summary: String) -> void:
 	last_action_label.text = summary
+	if game_engine.is_enemy_immunity_cancelled:
+		enemy_card_view.set_immunity_badge_visible(false)
 
 func _on_banner_triggered(message: String, banner_type: String) -> void:
 	banner_label.text = message
@@ -304,13 +316,13 @@ func _on_banner_triggered(message: String, banner_type: String) -> void:
 func _on_phase_changed(new_phase: GameEngine.Phase) -> void:
 	match new_phase:
 		GameEngine.Phase.PHASE_PLAYER:
-			footer_guide.text = "A: 決定 | X: 選択/解除 | Y: パス | B: 取消 | 十字キー: 移動"
+			footer_guide.text = "A: 決定 | X: 選択/解除 | Y: パス | START: ポーズ | 十字キー: 移動"
 			footer_guide.add_theme_color_override("font_color", Color("81c784"))
 		GameEngine.Phase.PHASE_ENEMY_COUNTER:
 			footer_guide.text = "【敵の反撃！】敵ATK以上のカードを選択し A: 防御 | X: 選択/解除"
 			footer_guide.add_theme_color_override("font_color", Color("ff8a80"))
 		GameEngine.Phase.PHASE_GAME_OVER:
-			footer_guide.text = "【GAME OVER】A または B ボタンを押してリスタート"
+			footer_guide.text = "【GAME OVER】A または B で再戦 | START: ポーズ"
 			footer_guide.add_theme_color_override("font_color", Color("e57373"))
 		GameEngine.Phase.PHASE_GAME_WIN:
 			footer_guide.text = "【VICTORY!!】全12体撃破！ A または B でリスタート"
